@@ -16,11 +16,10 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "QuantumShield — Kriptografi Pasca Kuantum",
+  title: "QuantumShield — Post-Quantum Cryptography",
   description:
-    "Toolkit kriptografi pasca kuantum yang mengimplementasikan algoritma standar NIST: ML-KEM (Kyber), ML-DSA (Dilithium), dan SLH-DSA (SPHINCS+). Aman dari ancaman komputer kuantum.",
+    "A post-quantum cryptography toolkit implementing NIST-standardized algorithms: ML-KEM (Kyber), ML-DSA (Dilithium), and SLH-DSA (SPHINCS+). Safe from the threat of quantum computers.",
   keywords: [
-    "kriptografi pasca kuantum",
     "post-quantum cryptography",
     "PQC",
     "ML-KEM",
@@ -37,9 +36,9 @@ export const metadata: Metadata = {
   ],
   authors: [{ name: "QuantumShield" }],
   openGraph: {
-    title: "QuantumShield — Kriptografi Pasca Kuantum",
+    title: "QuantumShield — Post-Quantum Cryptography",
     description:
-      "Toolkit algoritma standar NIST untuk kriptografi tahan serangan komputer kuantum.",
+      "A NIST-standardized algorithm toolkit for cryptography resistant to quantum computer attacks.",
     type: "website",
   },
 };
@@ -50,7 +49,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="id" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-foreground`}
       >

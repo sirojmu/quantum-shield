@@ -16,7 +16,7 @@ export async function POST(request: NextRequest) {
     const variant = body?.variant as SlhDsaVariant;
     if (!variant || !VALID.includes(variant)) {
       return NextResponse.json(
-        { error: "Variant tidak valid" },
+        { error: "Invalid variant" },
         { status: 400 },
       );
     }
@@ -24,7 +24,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ ok: true, ...result });
   } catch (err) {
     return NextResponse.json(
-      { error: err instanceof Error ? err.message : "Gagal membuat pasangan kunci" },
+      { error: err instanceof Error ? err.message : "Failed to generate key pair" },
       { status: 500 },
     );
   }

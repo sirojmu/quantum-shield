@@ -9,16 +9,16 @@ export async function POST(request: NextRequest) {
     const variant = body?.variant as MlKemVariant;
     const publicKey = body?.publicKey as string;
     if (!variant || !VALID.includes(variant)) {
-      return NextResponse.json({ error: "Variant tidak valid" }, { status: 400 });
+      return NextResponse.json({ error: "Invalid variant" }, { status: 400 });
     }
     if (!publicKey || typeof publicKey !== "string") {
-      return NextResponse.json({ error: "Public key diperlukan (hex)" }, { status: 400 });
+      return NextResponse.json({ error: "Public key is required (hex)" }, { status: 400 });
     }
     const result = mlKemEncapsulate(variant, publicKey);
     return NextResponse.json({ ok: true, ...result });
   } catch (err) {
     return NextResponse.json(
-      { error: err instanceof Error ? err.message : "Gagal melakukan encapsulation" },
+      { error: err instanceof Error ? err.message : "Failed to perform encapsulation" },
       { status: 500 },
     );
   }

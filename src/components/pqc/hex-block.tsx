@@ -25,7 +25,7 @@ export function HexBlock({
   byteCount,
   variant = "default",
   className,
-  emptyHint = "Hasil akan muncul di sini setelah operasi dijalankan.",
+  emptyHint = "Result will appear here after running the operation.",
 }: HexBlockProps) {
   const accent =
     variant === "secret"

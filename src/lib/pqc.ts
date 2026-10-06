@@ -292,3 +292,77 @@ export function slhDsaVerify(
   return alg.verify(signature, msgBytes, publicKey);
 }
 
+// ---------------------------------------------------------------------------
+// Byte-level signing (for signing raw document / file bytes)
+// These accept Uint8Array messages directly, avoiding UTF-8 encoding so that
+// binary files are signed correctly. Used by the *-bytes API routes.
+// ---------------------------------------------------------------------------
+
+export function mlDsaSignBytes(
+  variant: MlDsaVariant,
+  secretKey: Uint8Array,
+  message: Uint8Array,
+): Uint8Array {
+  const alg = ML_DSA_VARIANTS[variant];
+  if (secretKey.length !== alg.lengths.secretKey) {
+    throw new Error(
+      `Secret key must be ${alg.lengths.secretKey} bytes, got ${secretKey.length}`,
+    );
+  }
+  return alg.sign(message, secretKey);
+}
+
+export function mlDsaVerifyBytes(
+  variant: MlDsaVariant,
+  publicKey: Uint8Array,
+  message: Uint8Array,
+  signature: Uint8Array,
+): boolean {
+  const alg = ML_DSA_VARIANTS[variant];
+  if (publicKey.length !== alg.lengths.publicKey) {
+    throw new Error(
+      `Public key must be ${alg.lengths.publicKey} bytes, got ${publicKey.length}`,
+    );
+  }
+  if (signature.length !== alg.lengths.signature) {
+    throw new Error(
+      `Signature must be ${alg.lengths.signature} bytes, got ${signature.length}`,
+    );
+  }
+  return alg.verify(signature, message, publicKey);
+}
+
+export function slhDsaSignBytes(
+  variant: SlhDsaVariant,
+  secretKey: Uint8Array,
+  message: Uint8Array,
+): Uint8Array {
+  const alg = SLH_DSA_VARIANTS[variant];
+  if (secretKey.length !== alg.lengths.secretKey) {
+    throw new Error(
+      `Secret key must be ${alg.lengths.secretKey} bytes, got ${secretKey.length}`,
+    );
+  }
+  return alg.sign(message, secretKey);
+}
+
+export function slhDsaVerifyBytes(
+  variant: SlhDsaVariant,
+  publicKey: Uint8Array,
+  message: Uint8Array,
+  signature: Uint8Array,
+): boolean {
+  const alg = SLH_DSA_VARIANTS[variant];
+  if (publicKey.length !== alg.lengths.publicKey) {
+    throw new Error(
+      `Public key must be ${alg.lengths.publicKey} bytes, got ${publicKey.length}`,
+    );
+  }
+  if (signature.length !== alg.lengths.signature) {
+    throw new Error(
+      `Signature must be ${alg.lengths.signature} bytes, got ${signature.length}`,
+    );
+  }
+  return alg.verify(signature, message, publicKey);
+}
+

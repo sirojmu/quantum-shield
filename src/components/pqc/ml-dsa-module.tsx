@@ -50,7 +50,7 @@ interface SignResult {
 }
 
 const DEFAULT_MESSAGE =
-  "Transaksi #42-2025: Transfer 1.000.000 IDR ke rekening 9876-5432. Non-repudiation wajib.";
+  "Transaction #42-2025: Transfer 1,000,000 IDR to account 9876-5432. Non-repudiation required.";
 
 export function MlDsaModule() {
   const [variant, setVariant] = React.useState<Variant>("ml-dsa-65");
@@ -82,16 +82,16 @@ export function MlDsaModule() {
         body: JSON.stringify({ variant }),
       });
       const data = await res.json();
-      if (!res.ok || !data.ok) throw new Error(data.error ?? "Gagal");
+      if (!res.ok || !data.ok) throw new Error(data.error ?? "Failed");
       setKeypair({
         publicKey: data.publicKey,
         secretKey: data.secretKey,
         publicKeySize: data.publicKeySize,
         secretKeySize: data.secretKeySize,
       });
-      toast.success("Pasangan kunci ML-DSA berhasil dibuat");
+      toast.success("ML-DSA key pair successfully generated");
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Gagal membuat kunci");
+      toast.error(err instanceof Error ? err.message : "Failed to generate keys");
     } finally {
       setKeygenLoading(false);
     }
@@ -110,14 +110,14 @@ export function MlDsaModule() {
         body: JSON.stringify({ variant, secretKey: keypair.secretKey, message }),
       });
       const data = await res.json();
-      if (!res.ok || !data.ok) throw new Error(data.error ?? "Gagal");
+      if (!res.ok || !data.ok) throw new Error(data.error ?? "Failed");
       setSignature({
         signature: data.signature,
         signatureSize: data.signatureSize,
       });
-      toast.success("Tanda tangan digital berhasil dibuat");
+      toast.success("Digital signature successfully generated");
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Gagal menandatangani");
+      toast.error(err instanceof Error ? err.message : "Failed to sign");
     } finally {
       setSignLoading(false);
     }
@@ -142,12 +142,12 @@ export function MlDsaModule() {
       const data = await res.json();
       setVerifyResult(Boolean(data.valid));
       if (data.valid) {
-        toast.success("Tanda tangan VALID — integritas & autentikasi terverifikasi");
+        toast.success("Signature VALID — integrity & authenticity verified");
       } else {
-        toast.warning("Tanda tangan TIDAK VALID — pesan telah diubah");
+        toast.warning("Signature INVALID — message was tampered");
       }
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Gagal verifikasi");
+      toast.error(err instanceof Error ? err.message : "Failed to verify");
     } finally {
       setVerifyLoading(false);
     }
@@ -192,8 +192,8 @@ export function MlDsaModule() {
       {/* Step 1: Keygen */}
       <StepCard
         step={1}
-        title="Pembangkitan Pasangan Kunci"
-        description="Kunci publik untuk verifikasi, kunci rahasia untuk menandatangani."
+        title="Key Pair Generation"
+        description="Public key for verification, secret key for signing."
         action={
           <Button onClick={runKeygen} disabled={keygenLoading} className="gap-2">
             {keygenLoading ? (
@@ -201,7 +201,7 @@ export function MlDsaModule() {
             ) : (
               <Sparkles className="size-4" />
             )}
-            {keypair ? "Buat Ulang Kunci" : "Buat Pasangan Kunci"}
+            {keypair ? "Regenerate Keys" : "Generate Key Pair"}
           </Button>
         }
       >
@@ -224,8 +224,8 @@ export function MlDsaModule() {
       {/* Step 2: Sign */}
       <StepCard
         step={2}
-        title="Tandatangani Pesan"
-        description="Tanda tangan dibuat dengan kunci rahasia. Siapa pun dapat memverifikasinya dengan kunci publik."
+        title="Sign Message"
+        description="The signature is created with the secret key. Anyone can verify it using the public key."
         action={
           <Button
             onClick={runSign}
@@ -238,14 +238,14 @@ export function MlDsaModule() {
             ) : (
               <PenTool className="size-4" />
             )}
-            Tanda Tangani
+            Sign
           </Button>
         }
       >
         <div className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="ml-dsa-msg" className="text-xs uppercase tracking-wide text-muted-foreground">
-              Pesan yang ditandatangani
+              Message to be signed
             </Label>
             <Textarea
               id="ml-dsa-msg"
@@ -256,7 +256,7 @@ export function MlDsaModule() {
               }}
               rows={3}
               className="resize-none font-mono text-sm"
-              placeholder="Tulis pesan di sini..."
+              placeholder="Write your message here..."
             />
           </div>
           <HexBlock
@@ -264,7 +264,7 @@ export function MlDsaModule() {
             value={signature?.signature}
             byteCount={signature?.signatureSize}
             variant="primary"
-            emptyHint="Tanda tangan akan muncul di sini setelah ditandatangani."
+            emptyHint="The signature will appear here after signing."
           />
         </div>
       </StepCard>
@@ -272,8 +272,8 @@ export function MlDsaModule() {
       {/* Step 3: Verify */}
       <StepCard
         step={3}
-        title="Verifikasi Tanda Tangan"
-        description="Periksa apakah tanda tangan valid untuk pesan & kunci publik yang diberikan."
+        title="Verify Signature"
+        description="Check whether the signature is valid for the given message & public key."
         action={
           <Button
             onClick={runVerify}
@@ -286,7 +286,7 @@ export function MlDsaModule() {
             ) : (
               <ShieldCheck className="size-4" />
             )}
-            Verifikasi
+            Verify
           </Button>
         }
       >
@@ -302,11 +302,11 @@ export function MlDsaModule() {
                 }}
               />
               <Label htmlFor="tamper" className="cursor-pointer text-sm">
-                Mode uji: ubah pesan sebelum verifikasi
+                Test mode: tamper with message before verification
               </Label>
             </div>
             <span className="text-xs text-muted-foreground">
-              {tampered ? "Pesan dimodifikasi (+spasi)" : "Pesan asli"}
+              {tampered ? "Message modified (+space)" : "Original message"}
             </span>
           </div>
 
@@ -327,13 +327,13 @@ export function MlDsaModule() {
               <div>
                 <p className="font-semibold">
                   {verifyResult
-                    ? "Tanda tangan VALID"
-                    : "Tanda tangan TIDAK VALID"}
+                    ? "Signature VALID"
+                    : "Signature INVALID"}
                 </p>
                 <p className="text-sm text-muted-foreground">
                   {verifyResult
-                    ? "Pesan terbukti otentik dan tidak diubah sejak ditandatangani."
-                    : "Verifikasi gagal — pesan telah diubah atau kunci tidak cocok."}
+                    ? "The message is proven authentic and unchanged since signing."
+                    : "Verification failed — the message was tampered or the key does not match."}
                 </p>
               </div>
             </div>
@@ -343,7 +343,7 @@ export function MlDsaModule() {
             <div className="flex items-center gap-3 rounded-lg border border-dashed border-border/60 p-4 text-muted-foreground">
               <ShieldAlert className="size-5 shrink-0" />
               <p className="text-sm">
-                Jalankan verifikasi untuk memeriksa validitas tanda tangan.
+                Run verification to check signature validity.
               </p>
             </div>
           )}

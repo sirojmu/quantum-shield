@@ -26,8 +26,8 @@ export function SiteHeader() {
 
         <nav className="hidden items-center gap-1 md:flex">
           <NavLink href="#toolkit">Toolkit</NavLink>
-          <NavLink href="#why">Mengapa PQC?</NavLink>
-          <NavLink href="#compare">Perbandingan</NavLink>
+          <NavLink href="#why">Why PQC?</NavLink>
+          <NavLink href="#compare">Comparison</NavLink>
         </nav>
 
         <div className="flex items-center gap-2">
@@ -41,7 +41,7 @@ export function SiteHeader() {
               href="https://csrc.nist.gov/projects/post-quantum-cryptography"
               target="_blank"
               rel="noreferrer"
-              aria-label="Dokumentasi NIST PQC"
+              aria-label="NIST PQC Documentation"
             >
               <ShieldCheck className="size-4" />
             </a>

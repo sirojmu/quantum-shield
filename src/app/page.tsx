@@ -6,6 +6,7 @@ import {
   ShieldCheck,
   Lock,
   FileSignature,
+  FileText,
   Hash,
   Cpu,
   AlertTriangle,
@@ -30,6 +31,7 @@ import { SiteHeader } from "@/components/pqc/site-header";
 import { MlKemModule } from "@/components/pqc/ml-kem-module";
 import { MlDsaModule } from "@/components/pqc/ml-dsa-module";
 import { SlhDsaModule } from "@/components/pqc/slh-dsa-module";
+import { DocumentTools } from "@/components/pqc/document-tools";
 import { ALGORITHMS } from "@/lib/pqc-meta";
 import { cn } from "@/lib/utils";
 
@@ -80,31 +82,31 @@ function Hero() {
               <span className="absolute inline-flex size-full animate-ping rounded-full bg-primary opacity-75" />
               <span className="relative inline-flex size-2 rounded-full bg-primary" />
             </span>
-            NIST FIPS 203 · 204 · 205 Distandarisasi
+            NIST FIPS 203 · 204 · 205 Standardized
           </div>
 
           <h1 className="text-balance text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
-            Kriptografi{" "}
-            <span className="text-primary text-glow">Pasca Kuantum</span>{" "}
-            yang Siap Pakai
+            Ready-to-Use{" "}
+            <span className="text-primary text-glow">Post-Quantum</span>{" "}
+            Cryptography
           </h1>
 
           <p className="mx-auto mt-6 max-w-2xl text-pretty text-base text-muted-foreground sm:text-lg">
-            Toolkit interaktif untuk menghasilkan kunci, menandatangani pesan, dan
-            melakukan pertukaran kunci aman menggunakan algoritma standar NIST yang
-            tahan terhadap serangan komputer kuantum.
+            An interactive toolkit for generating keys, signing messages, and
+            performing secure key exchange using NIST-standardized algorithms
+            that resist quantum computer attacks.
           </p>
 
           <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
             <Button asChild size="lg" className="gap-2">
               <a href="#toolkit">
                 <Atom className="size-4" />
-                Mulai Berkarya
+                Start Building
               </a>
             </Button>
             <Button asChild size="lg" variant="outline" className="gap-2">
               <a href="#why">
-                Pelajari Konsep
+                Learn the Concepts
                 <ArrowDown className="size-4" />
               </a>
             </Button>
@@ -120,10 +122,10 @@ function Hero() {
 
         {/* Stats */}
         <div className="mx-auto mt-16 grid max-w-4xl grid-cols-2 gap-4 sm:grid-cols-4">
-          <StatCard icon={Atom} value="3" label="Algoritma Standar" />
-          <StatCard icon={ShieldCheck} value="128–256" label="Bit Keamanan" />
-          <StatCard icon={BadgeCheck} value="12" label="Varian Parameter" />
-          <StatCard icon={Cpu} value="100%" label="Berjalan di Browser" />
+          <StatCard icon={Atom} value="3" label="Standard Algorithms" />
+          <StatCard icon={ShieldCheck} value="128–256" label="Security Bits" />
+          <StatCard icon={BadgeCheck} value="12" label="Parameter Variants" />
+          <StatCard icon={Cpu} value="100%" label="Runs in Browser" />
         </div>
       </div>
     </section>
@@ -169,14 +171,14 @@ function Toolkit() {
     <section id="toolkit" className="scroll-mt-16 border-t border-border/40">
       <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-20">
         <div className="mb-10 max-w-2xl">
-          <SectionLabel>Toolkit Interaktif</SectionLabel>
+          <SectionLabel>Interactive Toolkit</SectionLabel>
           <h2 className="mt-2 text-3xl font-bold tracking-tight">
-            Coba algoritma langsung
+            Try the algorithms hands-on
           </h2>
           <p className="mt-3 text-muted-foreground">
-            Setiap tab memungkinkan Anda membuat pasangan kunci, menjalankan
-            operasi kriptografi, dan memverifikasi hasilnya — semua terjadi di
-            sisi server dengan implementasi <code className="rounded bg-muted px-1.5 py-0.5 text-xs">@noble/post-quantum</code>.
+            Each tab lets you generate key pairs, run cryptographic operations,
+            and verify the results — all happening server-side using the{" "}
+            <code className="rounded bg-muted px-1.5 py-0.5 text-xs">@noble/post-quantum</code> implementation.
           </p>
         </div>
 
@@ -204,6 +206,13 @@ function Toolkit() {
                   Signature
                 </Badge>
               </TabsTrigger>
+              <TabsTrigger value="documents" className="gap-2 py-2">
+                <FileText className="size-4" />
+                <span>Documents</span>
+                <Badge variant="secondary" className="ml-1 hidden text-[10px] sm:inline-flex">
+                  Files
+                </Badge>
+              </TabsTrigger>
             </TabsList>
           </div>
 
@@ -221,6 +230,28 @@ function Toolkit() {
           <TabsContent value="slh-dsa" className="mt-6">
             <ModuleIntro algorithm={ALGORITHMS[2]} icon={Hash} />
             <SlhDsaModule />
+          </TabsContent>
+          <TabsContent value="documents" className="mt-6">
+            <Card className="mb-6 overflow-hidden border-border/60 bg-card/40">
+              <CardContent className="flex flex-col gap-4 p-5 sm:flex-row sm:items-start">
+                <div className="flex size-12 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                  <FileText className="size-6" />
+                </div>
+                <div className="flex-1 space-y-2">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <h3 className="text-lg font-bold">Document Tools</h3>
+                    <Badge variant="outline">Sign &amp; Encrypt</Badge>
+                  </div>
+                  <p className="text-sm text-muted-foreground">
+                    Upload a document to sign it digitally with your signature
+                    specimen image, or encrypt it using post-quantum key
+                    encapsulation. Produce self-contained packages you can verify
+                    or decrypt later.
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+            <DocumentTools />
           </TabsContent>
         </Tabs>
       </div>
@@ -267,37 +298,37 @@ function WhyPQC() {
     <section id="why" className="scroll-mt-16 border-t border-border/40 bg-muted/20">
       <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-20">
         <div className="mb-10 max-w-2xl">
-          <SectionLabel>Latar Belakang</SectionLabel>
+          <SectionLabel>Background</SectionLabel>
           <h2 className="mt-2 text-3xl font-bold tracking-tight">
-            Mengapa butuh kriptografi pasca kuantum?
+            Why do we need post-quantum cryptography?
           </h2>
           <p className="mt-3 text-muted-foreground">
-            Komputer kuantum berkapasitas besar akan mematahkan kriptografi yang
-            kita pakai sehari-hari. Persiapan harus dimulai sekarang.
+            Large-scale quantum computers will break the cryptography we rely on
+            every day. Preparation must begin now.
           </p>
         </div>
 
         <div className="grid gap-5 md:grid-cols-3">
           <InfoCard
             icon={Cpu}
-            title="Ancaman Komputer Kuantum"
+            title="The Quantum Computing Threat"
             tone="warn"
           >
-            Algoritma <strong>Shor</strong> yang berjalan di komputer kuantum
-            berkapasitas besar dapat memfaktorkan bilangan besar dan menghitung
-            logaritma diskret dalam waktu polinomial — mematahkan RSA, DSA, dan
-            ECC yang menjadi fondasi internet saat ini.
+            The <strong>Shor's</strong> algorithm running on a large-scale
+            quantum computer can factor large numbers and compute discrete
+            logarithms in polynomial time — breaking RSA, DSA, and ECC that form
+            the foundation of today's internet.
           </InfoCard>
           <InfoCard icon={Clock} title="Harvest Now, Decrypt Later" tone="warn">
-            Penyerang sudah <strong>merekam lalu lintas terenkripsi</strong>{" "}
-            hari ini untuk didekripsi nanti ketika komputer kuantum tersedia.
-            Data yang harus tetap rahasia selama 10–30 tahun perlu dilindungi
-            sejak sekarang.
+            Attackers are already <strong>recording encrypted traffic</strong>{" "}
+            today to decrypt later once quantum computers become available. Data
+            that must remain confidential for 10–30 years needs to be protected
+            starting now.
           </InfoCard>
-          <InfoCard icon={ShieldCheck} title="Solusi: Algoritma PQC" tone="ok">
-            NIST telah <strong>distandarisasi</strong> tiga algoritma berbasis
-            masalah lattice dan hash yang diyakini tahan terhadap serangan
-            kuantum maupun klasik — siap diadopsi secara luas.
+          <InfoCard icon={ShieldCheck} title="Solution: PQC Algorithms" tone="ok">
+            NIST has <strong>standardized</strong> three algorithms based on
+            lattice and hash problems believed to resist both quantum and
+            classical attacks — ready for widespread adoption.
           </InfoCard>
         </div>
 
@@ -308,19 +339,19 @@ function WhyPQC() {
             title="Key Encapsulation (KEM)"
             standard="ML-KEM · FIPS 203"
             points={[
-              "Dua pihak menyepakati kunci simetris rahasia lewat saluran publik",
-              "Pengganti aman untuk pertukaran kunci Diffie-Hellman",
-              "Hasil: shared secret 32-byte untuk enkripsi simetris (AES)",
+              "Two parties agree on a secret symmetric key over a public channel",
+              "A secure replacement for Diffie-Hellman key exchange",
+              "Result: a 32-byte shared secret for symmetric encryption (AES)",
             ]}
           />
           <CategoryCard
             icon={FileSignature}
-            title="Tanda Tangan Digital (Signature)"
+            title="Digital Signatures"
             standard="ML-DSA & SLH-DSA · FIPS 204/205"
             points={[
-              "Membuktikan identitas penanda & integritas pesan",
-              "Pengganti aman untuk RSA-PSS & ECDSA",
-              "Dua keluarga: lattice (cepat) & hash-based (konservatif)",
+              "Proves the signer's identity and message integrity",
+              "A secure replacement for RSA-PSS & ECDSA",
+              "Two families: lattice-based (fast) & hash-based (conservative)",
             ]}
           />
         </div>
@@ -412,13 +443,13 @@ function Comparison() {
     <section id="compare" className="scroll-mt-16 border-t border-border/40">
       <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-20">
         <div className="mb-10 max-w-2xl">
-          <SectionLabel>Spesifikasi Teknis</SectionLabel>
+          <SectionLabel>Technical Specs</SectionLabel>
           <h2 className="mt-2 text-3xl font-bold tracking-tight">
-            Perbandingan parameter & ukuran
+            Parameter & size comparison
           </h2>
           <p className="mt-3 text-muted-foreground">
-            Setiap algoritma menawarkan trade-off berbeda antara ukuran kunci,
-            ukuran tanda tangan, dan tingkat keamanan.
+            Each algorithm offers different trade-offs between key size,
+            signature size, and security level.
           </p>
         </div>
 
@@ -426,13 +457,13 @@ function Comparison() {
           <table className="w-full min-w-[760px] border-collapse text-sm">
             <thead>
               <tr className="border-b border-border/60 bg-muted/40">
-                <th className="px-4 py-3 text-left font-semibold">Algoritma</th>
-                <th className="px-4 py-3 text-left font-semibold">Standar</th>
-                <th className="px-4 py-3 text-left font-semibold">Varian</th>
+                <th className="px-4 py-3 text-left font-semibold">Algorithm</th>
+                <th className="px-4 py-3 text-left font-semibold">Standard</th>
+                <th className="px-4 py-3 text-left font-semibold">Variant</th>
                 <th className="px-4 py-3 text-right font-semibold">Pub. Key</th>
                 <th className="px-4 py-3 text-right font-semibold">Priv. Key</th>
                 <th className="px-4 py-3 text-right font-semibold">Sig / CT</th>
-                <th className="px-4 py-3 text-left font-semibold">Keamanan</th>
+                <th className="px-4 py-3 text-left font-semibold">Security</th>
               </tr>
             </thead>
             <tbody>
@@ -485,24 +516,24 @@ function Comparison() {
         <div className="mt-8 grid gap-4 sm:grid-cols-3">
           <TradeoffCard
             icon={Zap}
-            title="Kinerja"
-            mlkem="Encapsulation tercepat"
-            mldsa="Sign & verify cepat"
-            slhdsa="Sign paling lambat"
+            title="Performance"
+            mlkem="Fastest encapsulation"
+            mldsa="Fast sign & verify"
+            slhdsa="Slowest signing"
           />
           <TradeoffCard
             icon={Scale}
-            title="Ukuran"
-            mlkem="Kunci & CT menengah"
-            mldsa="Tanda tangan kompak"
-            slhdsa="Kunci kecil, sig sangat besar"
+            title="Size"
+            mlkem="Medium keys & CT"
+            mldsa="Compact signatures"
+            slhdsa="Small keys, very large signatures"
           />
           <TradeoffCard
             icon={ShieldCheck}
-            title="Keyakinan"
+            title="Confidence"
             mlkem="Lattice (well-studied)"
             mldsa="Lattice (well-studied)"
-            slhdsa="Hash (paling konservatif)"
+            slhdsa="Hash (most conservative)"
           />
         </div>
       </div>
@@ -566,15 +597,15 @@ function SiteFooter() {
               <span className="font-bold">QuantumShield</span>
             </div>
             <p className="mt-3 text-sm text-muted-foreground">
-              Toolkit edukasi untuk kriptografi pasca kuantum. Mengimplementasikan
-              algoritma standar NIST dengan <code className="rounded bg-muted px-1 py-0.5 text-xs">@noble/post-quantum</code>.
+              An educational toolkit for post-quantum cryptography. Implements
+              NIST-standardized algorithms with <code className="rounded bg-muted px-1 py-0.5 text-xs">@noble/post-quantum</code>.
             </p>
           </div>
 
           <div className="grid grid-cols-2 gap-x-12 gap-y-2 text-sm sm:grid-cols-3">
             <FooterLink href="#toolkit">Toolkit</FooterLink>
-            <FooterLink href="#why">Konsep PQC</FooterLink>
-            <FooterLink href="#compare">Perbandingan</FooterLink>
+            <FooterLink href="#why">PQC Concepts</FooterLink>
+            <FooterLink href="#compare">Comparison</FooterLink>
             <FooterLink href="https://csrc.nist.gov/projects/post-quantum-cryptography" external>NIST PQC</FooterLink>
             <FooterLink href="https://noble.post-quantum.org" external>noble-lib</FooterLink>
             <FooterLink href="https://openquantumsafe.org" external>Open Quantum Safe</FooterLink>
@@ -584,10 +615,10 @@ function SiteFooter() {
         <div className="mt-8 flex flex-col items-start justify-between gap-3 border-t border-border/40 pt-6 text-xs text-muted-foreground sm:flex-row sm:items-center">
           <p className="flex items-center gap-1.5">
             <Lock className="size-3.5" />
-            Semua operasi kriptografi berjalan di sisi server. Tidak ada kunci yang disimpan.
+            All cryptographic operations run server-side. No keys are stored.
           </p>
           <p>
-            Dibuat untuk tujuan edukasi · © {new Date().getFullYear()} QuantumShield
+            Built for educational purposes · © {new Date().getFullYear()} QuantumShield
           </p>
         </div>
       </div>

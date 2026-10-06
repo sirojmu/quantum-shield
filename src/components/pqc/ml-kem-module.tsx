@@ -82,16 +82,16 @@ export function MlKemModule() {
         body: JSON.stringify({ variant }),
       });
       const data = await res.json();
-      if (!res.ok || !data.ok) throw new Error(data.error ?? "Gagal");
+      if (!res.ok || !data.ok) throw new Error(data.error ?? "Failed");
       setKeypair({
         publicKey: data.publicKey,
         secretKey: data.secretKey,
         publicKeySize: data.publicKeySize,
         secretKeySize: data.secretKeySize,
       });
-      toast.success("Pasangan kunci ML-KEM berhasil dibuat");
+      toast.success("ML-KEM key pair successfully generated");
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Gagal membuat kunci");
+      toast.error(err instanceof Error ? err.message : "Failed to generate keys");
     } finally {
       setKeygenLoading(false);
     }
@@ -108,16 +108,16 @@ export function MlKemModule() {
         body: JSON.stringify({ variant, publicKey: keypair.publicKey }),
       });
       const data = await res.json();
-      if (!res.ok || !data.ok) throw new Error(data.error ?? "Gagal");
+      if (!res.ok || !data.ok) throw new Error(data.error ?? "Failed");
       setEncap({
         cipherText: data.cipherText,
         sharedSecret: data.sharedSecret,
         cipherTextSize: data.cipherTextSize,
         sharedSecretSize: data.sharedSecretSize,
       });
-      toast.success("Encapsulation berhasil — shared secret dihasilkan");
+      toast.success("Encapsulation successful — shared secret generated");
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Gagal encapsulate");
+      toast.error(err instanceof Error ? err.message : "Failed to encapsulate");
     } finally {
       setEncapLoading(false);
     }
@@ -137,14 +137,14 @@ export function MlKemModule() {
         }),
       });
       const data = await res.json();
-      if (!res.ok || !data.ok) throw new Error(data.error ?? "Gagal");
+      if (!res.ok || !data.ok) throw new Error(data.error ?? "Failed");
       setDecap({
         sharedSecret: data.sharedSecret,
         sharedSecretSize: data.sharedSecretSize,
       });
-      toast.success("Decapsulation berhasil");
+      toast.success("Decapsulation successful");
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Gagal decapsulate");
+      toast.error(err instanceof Error ? err.message : "Failed to decapsulate");
     } finally {
       setDecapLoading(false);
     }
@@ -192,8 +192,8 @@ export function MlKemModule() {
       {/* Step 1: Key generation */}
       <StepCard
         step={1}
-        title="Pembangkitan Pasangan Kunci"
-        description="Buat pasangan kunci publik & rahasia. Kunci publik dibagikan, kunci rahasia disimpan aman."
+        title="Key Pair Generation"
+        description="Generate a public & secret key pair. The public key is shared, the secret key is kept safe."
         action={
           <Button onClick={runKeygen} disabled={keygenLoading} className="gap-2">
             {keygenLoading ? (
@@ -201,7 +201,7 @@ export function MlKemModule() {
             ) : (
               <Sparkles className="size-4" />
             )}
-            {keypair ? "Buat Ulang Kunci" : "Buat Pasangan Kunci"}
+            {keypair ? "Regenerate Keys" : "Generate Key Pair"}
           </Button>
         }
       >
@@ -227,7 +227,7 @@ export function MlKemModule() {
         <StepCard
           step={2}
           title="Encapsulate — Alice"
-          description="Alice menggunakan kunci publik Bob untuk menghasilkan ciphertext dan shared secret."
+          description="Alice uses Bob's public key to generate a ciphertext and a shared secret."
           action={
             <Button
               onClick={runEncapsulate}
@@ -250,14 +250,14 @@ export function MlKemModule() {
               value={encap?.cipherText}
               byteCount={encap?.cipherTextSize}
               variant="primary"
-              emptyHint="Jalankan encapsulation untuk membuat ciphertext."
+              emptyHint="Run encapsulation to generate the ciphertext."
             />
             <HexBlock
               label="Shared Secret (K) — Alice"
               value={encap?.sharedSecret}
               byteCount={encap?.sharedSecretSize}
               variant="secret"
-              emptyHint="Shared secret akan muncul di sini."
+              emptyHint="The shared secret will appear here."
             />
           </div>
         </StepCard>
@@ -266,7 +266,7 @@ export function MlKemModule() {
         <StepCard
           step={3}
           title="Decapsulate — Bob"
-          description="Bob menggunakan kunci rahasianya untuk memulihkan shared secret dari ciphertext."
+          description="Bob uses his secret key to recover the shared secret from the ciphertext."
           action={
             <Button
               onClick={runDecapsulate}
@@ -289,7 +289,7 @@ export function MlKemModule() {
               value={decap?.sharedSecret}
               byteCount={decap?.sharedSecretSize}
               variant="secret"
-              emptyHint="Jalankan decapsulation untuk memulihkan shared secret."
+              emptyHint="Run decapsulation to recover the shared secret."
             />
             {encap && decap && (
               <div
@@ -308,13 +308,13 @@ export function MlKemModule() {
                 <div className="text-sm">
                   <p className="font-medium">
                     {secretsMatch
-                      ? "Shared secret cocok!"
-                      : "Shared secret TIDAK cocok"}
+                      ? "Shared secrets match!"
+                      : "Shared secrets do NOT match"}
                   </p>
                   <p className="text-xs text-muted-foreground">
                     {secretsMatch
-                      ? "Alice & Bob kini memiliki kunci simetris 256-bit yang identik untuk komunikasi aman."
-                      : "Terjadi kesalahan — periksa kembali input."}
+                      ? "Alice & Bob now have an identical 256-bit symmetric key for secure communication."
+                      : "An error occurred — please check the inputs."}
                   </p>
                 </div>
               </div>

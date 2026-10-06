@@ -9,7 +9,7 @@ export async function POST(request: NextRequest) {
     const variant = body?.variant as MlKemVariant;
     if (!variant || !VALID.includes(variant)) {
       return NextResponse.json(
-        { error: "Variant tidak valid. Gunakan: ml-kem-512 | ml-kem-768 | ml-kem-1024" },
+        { error: "Invalid variant. Use: ml-kem-512 | ml-kem-768 | ml-kem-1024" },
         { status: 400 },
       );
     }
@@ -17,7 +17,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ ok: true, ...result });
   } catch (err) {
     return NextResponse.json(
-      { error: err instanceof Error ? err.message : "Gagal membuat pasangan kunci" },
+      { error: err instanceof Error ? err.message : "Failed to generate key pair" },
       { status: 500 },
     );
   }

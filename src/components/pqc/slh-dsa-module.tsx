@@ -58,7 +58,7 @@ interface SignResult {
 }
 
 const DEFAULT_MESSAGE =
-  "Sertifikat akar CA — tidak dapat di-revoke tanpa mengganti seluruh rantai kepercayaan.";
+  "Root CA certificate — cannot be revoked without replacing the entire chain of trust.";
 
 export function SlhDsaModule() {
   const [variant, setVariant] = React.useState<Variant>("slh-dsa-sha2-128f");
@@ -90,16 +90,16 @@ export function SlhDsaModule() {
         body: JSON.stringify({ variant }),
       });
       const data = await res.json();
-      if (!res.ok || !data.ok) throw new Error(data.error ?? "Gagal");
+      if (!res.ok || !data.ok) throw new Error(data.error ?? "Failed");
       setKeypair({
         publicKey: data.publicKey,
         secretKey: data.secretKey,
         publicKeySize: data.publicKeySize,
         secretKeySize: data.secretKeySize,
       });
-      toast.success("Pasangan kunci SLH-DSA berhasil dibuat");
+      toast.success("SLH-DSA key pair successfully generated");
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Gagal membuat kunci");
+      toast.error(err instanceof Error ? err.message : "Failed to generate keys");
     } finally {
       setKeygenLoading(false);
     }
@@ -118,14 +118,14 @@ export function SlhDsaModule() {
         body: JSON.stringify({ variant, secretKey: keypair.secretKey, message }),
       });
       const data = await res.json();
-      if (!res.ok || !data.ok) throw new Error(data.error ?? "Gagal");
+      if (!res.ok || !data.ok) throw new Error(data.error ?? "Failed");
       setSignature({
         signature: data.signature,
         signatureSize: data.signatureSize,
       });
-      toast.success("Tanda tangan hash-based berhasil dibuat");
+      toast.success("Hash-based signature successfully generated");
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Gagal menandatangani");
+      toast.error(err instanceof Error ? err.message : "Failed to sign");
     } finally {
       setSignLoading(false);
     }
@@ -149,12 +149,12 @@ export function SlhDsaModule() {
       const data = await res.json();
       setVerifyResult(Boolean(data.valid));
       if (data.valid) {
-        toast.success("Tanda tangan VALID — integritas terverifikasi");
+        toast.success("Signature VALID — integrity verified");
       } else {
-        toast.warning("Tanda tangan TIDAK VALID — pesan telah diubah");
+        toast.warning("Signature INVALID — message was tampered");
       }
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Gagal verifikasi");
+      toast.error(err instanceof Error ? err.message : "Failed to verify");
     } finally {
       setVerifyLoading(false);
     }
@@ -200,17 +200,18 @@ export function SlhDsaModule() {
       <div className="flex items-start gap-3 rounded-lg border border-primary/20 bg-primary/5 p-3 text-sm">
         <ShieldCheck className="mt-0.5 size-4 shrink-0 text-primary" />
         <p className="text-muted-foreground">
-          <span className="font-medium text-foreground">Mengapa SLH-DSA?</span> Keamanannya
-          hanya bersandar pada fungsi hash — tanpa asumsi matematika kompleks. Kunci sangat
-          kecil, namun tanda tangan besar. Pilihan paling konservatif & tahan jangka panjang.
+          <span className="font-medium text-foreground">Why SLH-DSA?</span> Its security
+          relies solely on hash functions — no complex mathematical assumptions. Keys
+          are very small, but signatures are large. The most conservative &
+          long-term resistant choice.
         </p>
       </div>
 
       {/* Step 1: Keygen */}
       <StepCard
         step={1}
-        title="Pembangkitan Pasangan Kunci"
-        description="Kunci publik & rahasia berbasis hash. Sangat ringkas."
+        title="Key Pair Generation"
+        description="Hash-based public & secret keys. Very compact."
         action={
           <Button onClick={runKeygen} disabled={keygenLoading} className="gap-2">
             {keygenLoading ? (
@@ -218,7 +219,7 @@ export function SlhDsaModule() {
             ) : (
               <Sparkles className="size-4" />
             )}
-            {keypair ? "Buat Ulang Kunci" : "Buat Pasangan Kunci"}
+            {keypair ? "Regenerate Keys" : "Generate Key Pair"}
           </Button>
         }
       >
@@ -241,8 +242,8 @@ export function SlhDsaModule() {
       {/* Step 2: Sign */}
       <StepCard
         step={2}
-        title="Tandatangani Pesan"
-        description="Tanda tangan stateless menggunakan rantai Winternitz & hypertree Merkle."
+        title="Sign Message"
+        description="Stateless signature using Winternitz chains & Merkle hypertrees."
         action={
           <Button
             onClick={runSign}
@@ -255,14 +256,14 @@ export function SlhDsaModule() {
             ) : (
               <PenTool className="size-4" />
             )}
-            Tanda Tangani
+            Sign
           </Button>
         }
       >
         <div className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="slh-msg" className="text-xs uppercase tracking-wide text-muted-foreground">
-              Pesan yang ditandatangani
+              Message to be signed
             </Label>
             <Textarea
               id="slh-msg"
@@ -273,7 +274,7 @@ export function SlhDsaModule() {
               }}
               rows={3}
               className="resize-none font-mono text-sm"
-              placeholder="Tulis pesan di sini..."
+              placeholder="Write your message here..."
             />
           </div>
           <HexBlock
@@ -281,7 +282,7 @@ export function SlhDsaModule() {
             value={signature?.signature}
             byteCount={signature?.signatureSize}
             variant="primary"
-            emptyHint="Tanda tangan hash-based akan muncul di sini (bisa puluhan KB)."
+            emptyHint="The hash-based signature will appear here (can be tens of KB)."
           />
         </div>
       </StepCard>
@@ -289,8 +290,8 @@ export function SlhDsaModule() {
       {/* Step 3: Verify */}
       <StepCard
         step={3}
-        title="Verifikasi Tanda Tangan"
-        description="Verifikasi dilakukan dengan merangkai ulang rantai hash dan membandingkannya."
+        title="Verify Signature"
+        description="Verification is performed by recomposing the hash chain and comparing it."
         action={
           <Button
             onClick={runVerify}
@@ -303,7 +304,7 @@ export function SlhDsaModule() {
             ) : (
               <ShieldCheck className="size-4" />
             )}
-            Verifikasi
+            Verify
           </Button>
         }
       >
@@ -319,11 +320,11 @@ export function SlhDsaModule() {
                 }}
               />
               <Label htmlFor="slh-tamper" className="cursor-pointer text-sm">
-                Mode uji: ubah pesan sebelum verifikasi
+                Test mode: tamper with message before verification
               </Label>
             </div>
             <span className="text-xs text-muted-foreground">
-              {tampered ? "Pesan dimodifikasi (+spasi)" : "Pesan asli"}
+              {tampered ? "Message modified (+space)" : "Original message"}
             </span>
           </div>
 
@@ -344,13 +345,13 @@ export function SlhDsaModule() {
               <div>
                 <p className="font-semibold">
                   {verifyResult
-                    ? "Tanda tangan VALID"
-                    : "Tanda tangan TIDAK VALID"}
+                    ? "Signature VALID"
+                    : "Signature INVALID"}
                 </p>
                 <p className="text-sm text-muted-foreground">
                   {verifyResult
-                    ? "Integritas & autentikasi terverifikasi melalui rantai hash."
-                    : "Verifikasi gagal — pesan telah diubah."}
+                    ? "Integrity & authenticity verified via the hash chain."
+                    : "Verification failed — the message was tampered."}
                 </p>
               </div>
             </div>
@@ -360,7 +361,7 @@ export function SlhDsaModule() {
             <div className="flex items-center gap-3 rounded-lg border border-dashed border-border/60 p-4 text-muted-foreground">
               <ShieldAlert className="size-5 shrink-0" />
               <p className="text-sm">
-                Jalankan verifikasi untuk memeriksa validitas tanda tangan.
+                Run verification to check signature validity.
               </p>
             </div>
           )}

@@ -16,7 +16,7 @@ export function ThemeToggle() {
     <Button
       variant="outline"
       size="icon"
-      aria-label={isDark ? "Aktifkan mode terang" : "Aktifkan mode gelap"}
+      aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
       onClick={() => setTheme(isDark ? "light" : "dark")}
       className="size-9 rounded-full border-border/60 bg-background/60 backdrop-blur"
     >

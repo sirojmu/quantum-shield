@@ -53,7 +53,7 @@ export function CopyButton({ value, label, className, ...props }: CopyButtonProp
       ) : (
         <Copy className="size-3.5" />
       )}
-      {label ?? (copied ? "Tersalin" : "Salin")}
+      {label ?? (copied ? "Copied" : "Copy")}
     </button>
   );
 }

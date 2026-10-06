@@ -46,13 +46,13 @@ export const ALGORITHMS: AlgorithmMeta[] = [
     family: "Module-Lattice-based",
     securityLevel: "128 / 192 / 256-bit",
     description:
-      "Key Encapsulation Mechanism (KEM) berbasis lattice. Dua pihak dapat menyepakati kunci rahasia bersama melalui saluran yang tidak aman, tanpa pertukaran kunci langsung. Tahan terhadap serangan komputer kuantum Shor.",
-    nistStatus: "Distandarisasi (FIPS 203, Agustus 2024)",
+      "Lattice-based Key Encapsulation Mechanism (KEM). Two parties can agree on a shared secret key over an insecure channel without direct key exchange. Resistant to Shor's quantum computer attacks.",
+    nistStatus: "Standardized (FIPS 203, August 2024)",
     variants: [
       {
         id: "ml-kem-512",
         label: "ML-KEM-512",
-        security: "128-bit (Kategori 1)",
+        security: "128-bit (Category 1)",
         publicKeySize: 800,
         secretKeySize: 1632,
         cipherTextSize: 768,
@@ -61,7 +61,7 @@ export const ALGORITHMS: AlgorithmMeta[] = [
       {
         id: "ml-kem-768",
         label: "ML-KEM-768",
-        security: "192-bit (Kategori 3)",
+        security: "192-bit (Category 3)",
         publicKeySize: 1184,
         secretKeySize: 2400,
         cipherTextSize: 1088,
@@ -70,7 +70,7 @@ export const ALGORITHMS: AlgorithmMeta[] = [
       {
         id: "ml-kem-1024",
         label: "ML-KEM-1024",
-        security: "256-bit (Kategori 5)",
+        security: "256-bit (Category 5)",
         publicKeySize: 1568,
         secretKeySize: 3168,
         cipherTextSize: 1568,
@@ -87,13 +87,13 @@ export const ALGORITHMS: AlgorithmMeta[] = [
     family: "Module-Lattice-based",
     securityLevel: "128 / 192 / 256-bit",
     description:
-      "Skema tanda tangan digital berbasis lattice Module-LWE. Menyediakan autentikasi, non-penyangkalan, dan integritas data. Ukuran tanda tangan kompak dan kinerja tinggi — kandidat utama pengganti RSA/ECDSA.",
-    nistStatus: "Distandarisasi (FIPS 204, Agustus 2024)",
+      "Module-LWE lattice-based digital signature scheme. Provides authentication, non-repudiation, and data integrity. Compact signature size and high performance — a leading candidate to replace RSA/ECDSA.",
+    nistStatus: "Standardized (FIPS 204, August 2024)",
     variants: [
       {
         id: "ml-dsa-44",
         label: "ML-DSA-44",
-        security: "128-bit (Kategori 2)",
+        security: "128-bit (Category 2)",
         publicKeySize: 1312,
         secretKeySize: 2560,
         signatureSize: 2420,
@@ -101,7 +101,7 @@ export const ALGORITHMS: AlgorithmMeta[] = [
       {
         id: "ml-dsa-65",
         label: "ML-DSA-65",
-        security: "192-bit (Kategori 3)",
+        security: "192-bit (Category 3)",
         publicKeySize: 1952,
         secretKeySize: 4032,
         signatureSize: 3309,
@@ -109,7 +109,7 @@ export const ALGORITHMS: AlgorithmMeta[] = [
       {
         id: "ml-dsa-87",
         label: "ML-DSA-87",
-        security: "256-bit (Kategori 5)",
+        security: "256-bit (Category 5)",
         publicKeySize: 2592,
         secretKeySize: 4896,
         signatureSize: 4627,
@@ -125,13 +125,13 @@ export const ALGORITHMS: AlgorithmMeta[] = [
     family: "Hash-based (Stateless)",
     securityLevel: "128 / 192 / 256-bit",
     description:
-      "Skema tanda tangan berbasis hash stateless. Tidak bergantung pada asumsi teori bilangan — keamanannya hanya bersandar pada fungsi hash kriptografis. Konservatif dan paling tahan terhadap kemajuan algoritmik.",
-    nistStatus: "Distandarisasi (FIPS 205, Agustus 2024)",
+      "Stateless hash-based signature scheme. Does not rely on number-theoretic assumptions — its security depends solely on cryptographic hash functions. Conservative and most resistant to algorithmic advances.",
+    nistStatus: "Standardized (FIPS 205, August 2024)",
     variants: [
       {
         id: "slh-dsa-sha2-128f",
         label: "SLH-DSA-SHA2-128f",
-        security: "128-bit (cepat)",
+        security: "128-bit (fast)",
         publicKeySize: 32,
         secretKeySize: 64,
         signatureSize: 17088,
@@ -139,7 +139,7 @@ export const ALGORITHMS: AlgorithmMeta[] = [
       {
         id: "slh-dsa-sha2-128s",
         label: "SLH-DSA-SHA2-128s",
-        security: "128-bit (kecil)",
+        security: "128-bit (small)",
         publicKeySize: 32,
         secretKeySize: 64,
         signatureSize: 7856,
@@ -147,7 +147,7 @@ export const ALGORITHMS: AlgorithmMeta[] = [
       {
         id: "slh-dsa-sha2-192f",
         label: "SLH-DSA-SHA2-192f",
-        security: "192-bit (cepat)",
+        security: "192-bit (fast)",
         publicKeySize: 48,
         secretKeySize: 96,
         signatureSize: 35664,
@@ -155,7 +155,7 @@ export const ALGORITHMS: AlgorithmMeta[] = [
       {
         id: "slh-dsa-sha2-192s",
         label: "SLH-DSA-SHA2-192s",
-        security: "192-bit (kecil)",
+        security: "192-bit (small)",
         publicKeySize: 48,
         secretKeySize: 96,
         signatureSize: 16224,
@@ -163,7 +163,7 @@ export const ALGORITHMS: AlgorithmMeta[] = [
       {
         id: "slh-dsa-sha2-256f",
         label: "SLH-DSA-SHA2-256f",
-        security: "256-bit (cepat)",
+        security: "256-bit (fast)",
         publicKeySize: 64,
         secretKeySize: 128,
         signatureSize: 49856,
@@ -171,7 +171,7 @@ export const ALGORITHMS: AlgorithmMeta[] = [
       {
         id: "slh-dsa-sha2-256s",
         label: "SLH-DSA-SHA2-256s",
-        security: "256-bit (kecil)",
+        security: "256-bit (small)",
         publicKeySize: 64,
         secretKeySize: 128,
         signatureSize: 29792,
