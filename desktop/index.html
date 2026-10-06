@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; script-src 'self'"
+    />
+    <title>QuantumShield Desktop</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div id="app">
+      <!-- Custom title bar (draggable in Electron) -->
+      <header class="titlebar">
+        <div class="titlebar-left">
+          <div class="logo" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none" />
+              <ellipse cx="12" cy="12" rx="10" ry="4" />
+              <ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(60 12 12)" />
+              <ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(120 12 12)" />
+            </svg>
+          </div>
+          <span class="titlebar-title">QuantumShield</span>
+          <span class="titlebar-badge">Desktop</span>
+        </div>
+        <div class="titlebar-right">
+          <span class="offline-pill" title="No network — everything runs locally">
+            <span class="dot"></span> Offline
+          </span>
+          <button class="win-btn" id="min-btn" title="Minimize" aria-label="Minimize">
+            <svg viewBox="0 0 10 10"><rect x="1" y="5" width="8" height="1" /></svg>
+          </button>
+          <button class="win-btn" id="max-btn" title="Maximize" aria-label="Maximize">
+            <svg viewBox="0 0 10 10"><rect x="1" y="1" width="8" height="8" fill="none" stroke="currentColor" /></svg>
+          </button>
+          <button class="win-btn close" id="close-btn" title="Close" aria-label="Close">
+            <svg viewBox="0 0 10 10"><path d="M1 1 L9 9 M9 1 L1 9" stroke="currentColor" /></svg>
+          </button>
+        </div>
+      </header>
+
+      <!-- Main content -->
+      <main class="content">
+        <div class="hero">
+          <h1>Post-Quantum File Encryption</h1>
+          <p>
+            Encrypt files with <strong>ML-KEM</strong> (NIST FIPS 203) +
+            <strong>AES-256-GCM</strong>. Everything runs locally — your files
+            never leave this machine.
+          </p>
+        </div>
+
+        <!-- Tabs -->
+        <div class="tabs" role="tablist">
+          <button class="tab active" data-tab="encrypt" role="tab" aria-selected="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="5" y="11" width="14" height="10" rx="2" />
+              <path d="M8 11V7a4 4 0 0 1 8 0v4" />
+            </svg>
+            Encrypt
+          </button>
+          <button class="tab" data-tab="decrypt" role="tab" aria-selected="false">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="5" y="11" width="14" height="10" rx="2" />
+              <path d="M8 11V7a4 4 0 0 1 8 0" />
+            </svg>
+            Decrypt
+          </button>
+          <button class="tab" data-tab="keys" role="tab" aria-selected="false">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="8" cy="15" r="4" />
+              <path d="M10.8 12.2 21 2m-4 4 2 2M15 7l2 2" />
+            </svg>
+            Keys
+          </button>
+        </div>
+
+        <!-- Encrypt panel -->
+        <section class="panel active" id="panel-encrypt">
+          <div class="dropzone" id="enc-dropzone" tabindex="0" role="button" aria-label="Select a file to encrypt">
+            <div class="dz-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M12 3v12m0-12 4 4m-4-4-4 4" />
+                <path d="M4 15v4a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-4" />
+              </svg>
+            </div>
+            <p class="dz-title" id="enc-file-label">Drop a file here or click to browse</p>
+            <p class="dz-sub" id="enc-file-sub">Any file type · max 50 MB</p>
+            <input type="file" id="enc-file-input" hidden />
+          </div>
+
+          <div class="form-row">
+            <label for="enc-variant">Encryption strength</label>
+            <select id="enc-variant">
+              <option value="ml-kem-512">ML-KEM-512 · 128-bit</option>
+              <option value="ml-kem-768" selected>ML-KEM-768 · 192-bit</option>
+              <option value="ml-kem-1024">ML-KEM-1024 · 256-bit</option>
+            </select>
+          </div>
+
+          <button class="btn btn-primary" id="enc-btn" disabled>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="5" y="11" width="14" height="10" rx="2" />
+              <path d="M8 11V7a4 4 0 0 1 8 0v4" />
+            </svg>
+            Encrypt &amp; Save
+          </button>
+
+          <div class="result-card" id="enc-result" hidden>
+            <div class="result-header">
+              <span class="result-icon ok">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <path d="M20 6 9 17l-5-5" />
+                </svg>
+              </span>
+              <div>
+                <p class="result-title">Encryption successful</p>
+                <p class="result-sub" id="enc-result-sub"></p>
+              </div>
+            </div>
+            <div class="result-details" id="enc-result-details"></div>
+            <button class="btn btn-ghost" id="enc-save-btn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 3v12m0 0 4-4m-4 4-4-4M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2" />
+              </svg>
+              Save .qenc package
+            </button>
+          </div>
+        </section>
+
+        <!-- Decrypt panel -->
+        <section class="panel" id="panel-decrypt">
+          <div class="dropzone" id="dec-dropzone" tabindex="0" role="button" aria-label="Select a .qenc package to decrypt">
+            <div class="dz-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M4 15v4a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-4" />
+                <path d="M12 3v12m0 0 4-4m-4 4 4 4" transform="rotate(180 12 11)" />
+              </svg>
+            </div>
+            <p class="dz-title" id="dec-file-label">Drop a .qenc package here</p>
+            <p class="dz-sub" id="dec-file-sub">QuantumShield encrypted package</p>
+            <input type="file" id="dec-file-input" accept=".qenc,.json,application/json" hidden />
+          </div>
+
+          <div class="result-card" id="dec-result" hidden>
+            <div class="result-header">
+              <span class="result-icon" id="dec-result-icon"></span>
+              <div>
+                <p class="result-title" id="dec-result-title"></p>
+                <p class="result-sub" id="dec-result-sub"></p>
+              </div>
+            </div>
+            <div class="result-details" id="dec-result-details"></div>
+            <button class="btn btn-ghost" id="dec-save-btn" hidden>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 3v12m0 0 4-4m-4 4-4-4M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2" />
+              </svg>
+              Save decrypted file
+            </button>
+          </div>
+        </section>
+
+        <!-- Keys panel -->
+        <section class="panel" id="panel-keys">
+          <div class="info-banner">
+            <p>
+              Generate a post-quantum key pair. Share your <strong>public key</strong>
+              openly so others can encrypt files for you. Keep your
+              <strong>secret key</strong> safe — it's the only way to decrypt.
+            </p>
+          </div>
+          <div class="form-row">
+            <label for="key-variant">Key algorithm</label>
+            <select id="key-variant">
+              <option value="ml-kem-512">ML-KEM-512 · 128-bit</option>
+              <option value="ml-kem-768" selected>ML-KEM-768 · 192-bit</option>
+              <option value="ml-kem-1024">ML-KEM-1024 · 256-bit</option>
+            </select>
+          </div>
+          <button class="btn btn-primary" id="keygen-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 2v4M12 18v4M2 12h4M18 12h4M4.9 4.9l2.8 2.8M16.3 16.3l2.8 2.8M19.1 4.9l-2.8 2.8M7.7 16.3l-2.8 2.8" />
+            </svg>
+            Generate Key Pair
+          </button>
+          <div class="key-output" id="key-output" hidden>
+            <div class="key-block">
+              <div class="key-head">
+                <span>Public Key</span>
+                <button class="copy-btn" data-copy="public">Copy</button>
+              </div>
+              <pre class="key-value" id="key-public"></pre>
+            </div>
+            <div class="key-block secret">
+              <div class="key-head">
+                <span>Secret Key (private — never share)</span>
+                <button class="copy-btn" data-copy="secret">Copy</button>
+              </div>
+              <pre class="key-value" id="key-secret"></pre>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <!-- Status bar -->
+      <footer class="statusbar">
+        <span id="status-text">Ready</span>
+        <span class="status-meta">FIPS 203 · AES-256-GCM · 100% local</span>
+      </footer>
+    </div>
+
+    <script src="renderer.js"></script>
+  </body>
+</html>

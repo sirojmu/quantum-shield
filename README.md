@@ -18,6 +18,7 @@
   - [2. ML-DSA (Dilithium) — Digital Signatures](#2-ml-dsa-dilithium--digital-signatures)
   - [3. SLH-DSA (SPHINCS+) — Hash-based Signatures](#3-slh-dsa-sphincs--hash-based-signatures)
   - [4. Document Tools — Sign / Verify / Encrypt / Decrypt](#4-document-tools--sign--verify--encrypt--decrypt)
+- [Desktop App](#desktop-app)
 - [Project Structure](#project-structure)
 - [Security Notes](#security-notes)
 - [Credits](#credits)
@@ -43,6 +44,7 @@ Large-scale quantum computers will eventually break the cryptography that secure
 - **Document signing** — upload any file + a signature specimen image → produce a downloadable `.qsig` package
 - **Document encryption** — encrypt files with ML-KEM + AES-256-GCM → `.qenc` package
 - **Verify & decrypt** uploaded packages end-to-end
+- **Standalone desktop app** — offline Electron app for file encryption (no server, no network)
 - **Dark/light theme** with an emerald "quantum" accent
 - **Fully responsive** mobile-first design
 - **100% server-side crypto** — no keys are stored
@@ -211,6 +213,73 @@ The digital signature is computed over the **raw document bytes**, ensuring any 
 
 ---
 
+## Desktop App
+
+This repository also includes a **standalone desktop application** in the [`desktop/`](desktop) folder — an **offline post-quantum file encryption** tool built with **Electron**.
+
+### Why a desktop app?
+
+The desktop app runs **entirely on your machine**. There is no server, no network calls, and no files ever leave your computer. This makes it ideal for encrypting sensitive documents — the crypto (ML-KEM + AES-256-GCM) runs directly in the app's renderer process.
+
+### What it does (encryption only)
+
+| Tab | Function |
+|-----|----------|
+| **Encrypt** | Select any file → choose ML-KEM strength (128/192/256-bit) → encrypt with ML-KEM + AES-256-GCM → save a `.qenc` package |
+| **Decrypt** | Open a `.qenc` package → recover the original file → save it |
+| **Keys** | Generate a post-quantum ML-KEM key pair (public + secret key) to share/keep |
+
+The `.qenc` package format is **compatible with the web app**, so packages created on the web can be decrypted in the desktop app and vice-versa.
+
+### Prerequisites
+
+- **[Node.js](https://nodejs.org/) 18+** (or [Bun](https://bun.sh/))
+- For building native binaries: see [electron-builder prerequisites](https://www.electron.build/)
+
+### Install & run
+
+```bash
+cd desktop
+npm install        # or: bun install
+npm run build      # bundles the renderer (esbuild → dist/)
+npm start          # launches the Electron window
+```
+
+### Build a native installer
+
+```bash
+cd desktop
+npm run dist       # produces installers in desktop/release/
+```
+
+This generates platform-specific installers (`.dmg` for macOS, `.exe`/NSIS for Windows, `.AppImage`/`.deb` for Linux) via `electron-builder`.
+
+### Desktop app architecture
+
+```
+desktop/
+├── electron/
+│   ├── main.js          # Electron main process (window, native file dialogs)
+│   └── preload.js       # Secure contextBridge API
+├── src/
+│   ├── renderer.ts      # UI logic (vanilla TS, browser-compatible)
+│   └── crypto.ts        # ML-KEM + AES-GCM (runs in renderer, no server)
+├── index.html           # App shell (custom title bar, tabs, status bar)
+├── styles.css           # Emerald dark desktop theme
+├── esbuild.config.mjs   # Bundler config
+└── package.json
+```
+
+**Key design choices:**
+- **Zero network.** The app makes no HTTP requests. `@noble/post-quantum` is bundled into the renderer; AES-256-GCM uses the native Web Crypto API.
+- **Native file dialogs.** Uses Electron's `dialog.showSaveDialog` for a real desktop save experience (falls back to browser download when run in a browser).
+- **Custom frameless window** with a draggable title bar and minimize/maximize/close controls.
+- **Same package format** as the web app (`.qenc`), so they interoperate.
+
+> ⚠️ As with the web app, the `.qenc` package embeds the ML-KEM secret key so you can decrypt later. **Never share these packages publicly.** For recipient-based encryption, keep the secret key separate and share only the ciphertext.
+
+---
+
 ## Project Structure
 
 ```
@@ -244,6 +313,12 @@ quantumshield/
 │       ├── bytes.ts             # Base64/hex byte helpers (client-safe)
 │       ├── db.ts                # Prisma client
 │       └── utils.ts             # cn() helper
+├── desktop/                     # Standalone Electron desktop app (encryption only)
+│   ├── electron/                # Main process + preload
+│   ├── src/                     # Renderer TS (crypto.ts, renderer.ts)
+│   ├── index.html               # App shell
+│   ├── styles.css               # Desktop theme
+│   └── esbuild.config.mjs       # Bundler
 ├── README.md
 ├── package.json
 └── tsconfig.json

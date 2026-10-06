@@ -113,3 +113,38 @@ Stage Summary:
 - 4 new API routes for byte-level signing (messageBase64/signatureBase64)
 - README.md ready for GitHub repository
 - All flows verified working in browser end-to-end
+
+---
+Task ID: 4 (desktop app)
+Agent: Z.ai Code (main)
+Task: Build a desktop version of the app (encryption only, Electron)
+
+Work Log:
+- Checked environment: Node v24, Bun, xvfb, Electron system libs (libnss3/libgbm/libatk) available; no Rust → chose Electron over Tauri
+- Scaffolded desktop/ Electron project (package.json with electron, esbuild, electron-builder, @noble/post-quantum)
+- Built desktop/src/crypto.ts: ML-KEM keygen/encapsulate/decapsulate + AES-256-GCM (Web Crypto), runs entirely in renderer — no server, no network
+- Built desktop/src/renderer.ts: vanilla TS UI logic (tabs, drag-drop zones, encrypt/decrypt/keys flows, copy buttons, window controls)
+- Built desktop/index.html: app shell with custom title bar (draggable in Electron), tabs (Encrypt/Decrypt/Keys), status bar, CSP
+- Built desktop/styles.css: emerald dark desktop theme, frameless window styling, dropzones, result cards, key output blocks
+- Built desktop/electron/main.js: BrowserWindow (frameless), IPC handlers for native save/open dialogs, window controls
+- Built desktop/electron/preload.js: secure contextBridge exposing saveFile/openFile/minimize/maximize/close
+- Built desktop/esbuild.config.mjs (ESM): bundles renderer.ts → dist/renderer.js (28 KB), copies index.html + styles.css
+- Installed deps: electron@33, electron-builder@25, esbuild@0.24, @noble/post-quantum@0.7.1
+- Built renderer bundle successfully (28 KB)
+- Verified crypto end-to-end in Node: ML-KEM keygen → encapsulate → decapsulate (shared secrets match) + AES-256-GCM round-trip PASS
+- Launched Electron headless via Xvfb :99 — process started, window loaded (dbus/GPU errors are non-fatal headless env warnings)
+- Served dist/ on port 3001 and verified full UI in agent-browser:
+  - Encrypt: uploaded test-doc.txt → "Encryption successful" with algorithm/size/ciphertext details ✓
+  - Decrypt: uploaded .qenc package → "Decryption successful · secret-doc.txt · 102 B" (round-trip PASS) ✓
+  - Keys: generated ML-KEM-768 key pair → hex public/secret keys displayed ✓
+  - No console errors
+- Updated README.md: added Desktop App section (why, features table, prerequisites, install/run, build installer, architecture, design choices), updated TOC, features list, and project structure tree
+
+Stage Summary:
+- Complete standalone Electron desktop app in desktop/ folder — encryption only (per user request)
+- 100% offline: crypto runs in renderer via @noble/post-quantum + Web Crypto, zero network calls
+- 3 tabs: Encrypt (file → .qenc), Decrypt (.qenc → file), Keys (generate ML-KEM keypair)
+- Compatible .qenc package format with the web app
+- Native file save dialogs via Electron (browser fallback for preview)
+- Renderer bundle: 28 KB; crypto verified; Electron launches headless; full UI verified in browser
+- README documents install (npm install && npm run build && npm start) and native installer build (npm run dist)

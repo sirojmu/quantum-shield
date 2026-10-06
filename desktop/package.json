@@ -1,0 +1,45 @@
+{
+  "name": "quantumshield-desktop",
+  "version": "1.0.0",
+  "description": "QuantumShield Desktop — offline post-quantum file encryption (ML-KEM + AES-256-GCM). Files never leave your machine.",
+  "main": "electron/main.js",
+  "scripts": {
+    "build": "node esbuild.config.mjs",
+    "dev": "node esbuild.config.mjs && electron .",
+    "start": "electron .",
+    "dist": "electron-builder"
+  },
+  "author": "QuantumShield",
+  "license": "MIT",
+  "dependencies": {
+    "@noble/post-quantum": "^0.7.1"
+  },
+  "devDependencies": {
+    "electron": "^33.0.0",
+    "electron-builder": "^25.0.0",
+    "esbuild": "^0.24.0"
+  },
+  "build": {
+    "appId": "io.github.quantumshield.desktop",
+    "productName": "QuantumShield",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "electron/**/*",
+      "dist/**/*",
+      "package.json"
+    ],
+    "mac": {
+      "category": "public.app-category.utilities",
+      "target": "dmg"
+    },
+    "win": {
+      "target": "nsis"
+    },
+    "linux": {
+      "target": ["AppImage", "deb"],
+      "category": "Utility"
+    }
+  }
+}
