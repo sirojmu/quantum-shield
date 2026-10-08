@@ -97,7 +97,7 @@ Large-scale quantum computers will eventually break the cryptography that secure
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/<your-username>/quantumshield.git
+git clone https://github.com/sirojmu/quantum-shield.git
 cd quantumshield
 
 # 2. Install dependencies (choose one)
